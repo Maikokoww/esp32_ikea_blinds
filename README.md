@@ -6,6 +6,14 @@ Control your blinds using an ESP32
 This project is about making a DIY automatic blinds controller using an esp32 and a motor for IKEA FRIDANS.
 Be careful, the code is shaky, modify it to make it work  for your blinds's position.
 
+## Components
+- ESP32
+- JGA25-370, 6V 280RPM motor
+- LM2596, DC-DC step-down transformer
+- MX1508, motor controller
+- 6V battery
+- Switch (optional)
+
 ## Libraries
 - WiFi.h
 - [ESP32Encoder.h](https://github.com/madhephaestus/ESP32Encoder)
@@ -18,7 +26,7 @@ Be careful, the code is shaky, modify it to make it work  for your blinds's posi
 
 
 ## Codes
-**There is some part you need to edit to make it work for you : **
+**There is some part you need to edit to make it work for you :**
 ```C++
 // Wifi
 const char *ssid = "yourSSID";
