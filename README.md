@@ -30,4 +30,10 @@ This project is about making a DIY automatic blinds controller using an esp32 an
 
 ```
 ## Build
-![Build]()
+**The assembly should look like this :**
+
+![assembly]()
+
+**The connection for this build is :**
+
+![connection]()
