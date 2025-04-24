@@ -4,6 +4,7 @@ Control your blinds using an ESP32
 **This project is made by a passionate student**
 
 This project is about making a DIY automatic blinds controller using an esp32 and a motor for IKEA FRIDANS.
+Be careful, the code is shaky, modify it to make it work  for your blinds's position.
 
 ## Libraries
 - WiFi.h
@@ -17,16 +18,28 @@ This project is about making a DIY automatic blinds controller using an esp32 an
 
 
 ## Codes
+**There is some part you need to edit to make it work for you : **
 ```C++
-// Librairies
-#include <WiFi.h>
-#include <ESP32Encoder.h>
-#include <FS_MX1508.h>
-#include <WiFiUdp.h>
-#include <NTPClient.h>
-#include <HTTPClient.h>
-#include <Arduino_JSON.h>
-#include <Preferences.h>
+// Wifi
+const char *ssid = "yourSSID";
+const char *password = "yourPassword";
+
+// ESP32Encoder
+#define pinEncoderA 16 // Set your encoder pins
+#define pinEncoderB 17
+#define BASE 200 // Adjust it to make your encoderPosition=100 when your blinds are closed (ex. 200000/BASE = 100%)
+
+// FS_MX1508
+#define pinINA1 20 // Set your motor controler pins
+#define pinINB1 21
+
+// NTPClient
+NTPClient ntpClient(ntpUDP, "0.be.pool.ntp.org", 7200); // Ajust it for your country timestamp (ex. 7200 = +2UTC)
+
+// HTTPClient
+const char* apiKey = "yourApiKeyOpenWeatherMap";  // Replace with your API key
+const char* city = "yourCity";        // Replace with your city
+const char* weatherURL = "http://api.openweathermap.org/data/2.5/weather?q=yourCity&appid=yourApiKeyOpenWeatherMap";
 
 ```
 ## Build
