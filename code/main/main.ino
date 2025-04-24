@@ -9,8 +9,8 @@
 #include <Preferences.h>
 
 // Wifi
-const char *ssid = "WiFi-2.4-ED30";
-const char *password = "wry7ayk6f23sf";
+const char *ssid = "yourSSID";
+const char *password = "youtPassword";
 NetworkServer server(80);
 
 // ESP32Encoder
@@ -36,9 +36,9 @@ int currentMinute = -1;
 long lastupdate2 = 0;
 
 // HTTPClient
-const char* apiKey = "25b52f40e5dcc0e04a08fc7033cf00e4";  // Replace with your API key
-const char* city = "Lodelinsart";        // Replace with your city
-const char* weatherURL = "http://api.openweathermap.org/data/2.5/weather?q=Lodelinsart&appid=25b52f40e5dcc0e04a08fc7033cf00e4";
+const char* apiKey = "yourApiKeyFromOpenWeatherMap";  // Replace with your API key
+const char* city = "yourCity";        // Replace with your city
+const char* weatherURL = "http://api.openweathermap.org/data/2.5/weather?q=yourCity&appid=yourApiKeyFromOpenWeatherMap";
 long lastupdate3 = 0;
 
 // Preferences
