@@ -7,10 +7,10 @@ This project is about making a DIY automatic blinds controller using an esp32 an
 Be careful, the code is shaky, modify it to make it work  for your blinds's position.
 
 ## Components
-- ESP32
-- JGA25-370, 6V 280RPM motor
-- LM2596, DC-DC step-down transformer
-- MX1508, motor controller
+- [ESP32](https://fr.aliexpress.com/item/1005006458998450.html?spm=a2g0o.order_list.order_list_main.10.68f45e5bF2hVjN&gatewayAdapt=glo2fra)
+- [JGA25-370](https://fr.aliexpress.com/item/4001314473291.html?spm=a2g0o.order_list.order_list_main.40.68f45e5bF2hVjN&gatewayAdapt=glo2fra), 6V 280RPM motor
+- [LM2596](https://fr.aliexpress.com/item/1005004904872120.html?spm=a2g0o.order_list.order_list_main.4.68f45e5bF2hVjN&gatewayAdapt=glo2fra), DC-DC step-down transformer
+- [MX1508](https://fr.aliexpress.com/item/1005006365803938.html?spm=a2g0o.order_list.order_list_main.28.68f45e5bF2hVjN&gatewayAdapt=glo2fra), motor controller
 - 6V battery
 - Switch (optional)
 
@@ -58,3 +58,7 @@ const char* weatherURL = "http://api.openweathermap.org/data/2.5/weather?q=yourC
 **The connection for this build is :**
 
 ![connection](/build/connection.jpg)
+
+**The final build should look something like this :**
+
+![reel](/build/reel.JPEG)
