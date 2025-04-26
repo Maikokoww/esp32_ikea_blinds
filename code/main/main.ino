@@ -23,7 +23,6 @@ long lastupdate1 = 0;
 // FS_MX1508
 #define pinINA1 20
 #define pinINB1 21
-#define PWM 100
 MX1508 motor1(pinINA1, pinINB1);
 
 // WifiUdp
@@ -44,12 +43,12 @@ long lastupdate3 = 0;
 // Preferences
 Preferences preferences;
 
-// Préparation des fonctions
-int getEncoderPosition();
-void store(int encoderPosition, int storePosition);
+// Set functions
+int getMotorPosition();
+void store(int motorPosition, int closedPercentage);
 void getWeather();
 int retrieveEEPROM();
-void saveEEPROM(int positionMoteur);
+void saveEEPROM(int motorPosition);
 
 void setup(){
   Serial.begin(115200);
@@ -83,12 +82,12 @@ void setup(){
 void loop() {
   unsigned long currentMillis = millis();
  
-  if(currentMillis - lastupdate1 > 2500){
-    getEncoderPosition();
+  if(currentMillis - lastupdate1 > 2500){ // Checks every 2.5 seconds
+    getMotorPosition();
     lastupdate1 = currentMillis;
   }
 
-  if(currentMillis - lastupdate2 > 30000)
+  if(currentMillis - lastupdate2 > 30000) // Checks every 30 seconds
   {
     ntpClient.update();
     int currentHour = ntpClient.getHours();
@@ -100,7 +99,7 @@ void loop() {
     lastupdate2 = currentMillis;
   }
 
-  if(currentMillis - lastupdate3 > 900000)
+  if(currentMillis - lastupdate3 > 900000) // Checks every 15 minutes
   {
     getWeather();
     lastupdate3 = currentMillis;
@@ -128,11 +127,11 @@ void loop() {
 
             // the content of the HTTP response follows the header:
             client.print("<body>");
-            client.print("<a href=\"/store100\">Clique ici pour mettre les stores à 100%% ouverts.<br></a>");
-            client.print("<a href=\"/store75\">Clique ici pour mettre les stores à 75%% ouverts.<br></a>");
-            client.print("<a href=\"/store50\">Clique ici pour mettre les stores à 50%% ouverts.<br></a>");
-            client.print("<a href=\"/store25\">Clique ici pour mettre les stores à 25%% ouverts.<br></a>");
-            client.print("<a href=\"/store0\">Clique ici pour mettre les stores à 0%% ouverts.<br></a>");
+            client.print("<a href=\"/store100\">Click here to set blinds to 100%<br></a>");
+            client.print("<a href=\"/store75\">Click here to set blinds to 75%<br></a>");
+            client.print("<a href=\"/store50\">Click here to set blinds to 50%<br></a>");
+            client.print("<a href=\"/store25\">Click here to set blinds to 25%<br></a>");
+            client.print("<a href=\"/store0\">Click here to set blinds to 0%<br></a>");
             client.print("<style>*{margin:0;padding:0}body{display:flex;position:absolute;"
              "flex-direction:column;gap:10px;width:100vw;background-color:#696969}"
              "h1{width:100%;justify-content:center;display:flex;font-size:large}"
@@ -151,42 +150,41 @@ void loop() {
           currentLine += c;      // add it to the end of the currentLine
         }
 
-        // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /store100")) {
-          store(getEncoderPosition(), 100);
-          Serial.println("Position du store à 100");
+          store(getMotorPosition(), 100);
+          Serial.println("Blinds position : 100");
         }
         if (currentLine.endsWith("GET /store75")) {
-          store(getEncoderPosition(), 75);
-          Serial.println("Position du store à 75");
+          store(getMotorPosition(), 75);
+          Serial.println("Blinds position : 75");
         }
         if (currentLine.endsWith("GET /store50")) {
-          store(getEncoderPosition(), 50);
-          Serial.println("Position du store à 50");
+          store(getMotorPosition(), 50);
+          Serial.println("Blinds position : 50");
         }
         if (currentLine.endsWith("GET /store25")) {
-          store(getEncoderPosition(), 25);
-          Serial.println("Position du store à 25");
+          store(getMotorPosition(), 25);
+          Serial.println("Blinds position : 25");
         }
         if (currentLine.endsWith("GET /store0")) {
-          store(getEncoderPosition(), 0);
-          Serial.println("Position du store à 0");
+          store(getMotorPosition(), 0);
+          Serial.println("Blinds position : 0");
         }
         if (currentHour != -1){
           if (currentHour == 6 && currentMinute == 30){
-            store(getEncoderPosition(), 33);
+            store(getMotorPosition(), 33);
           }
           if (currentHour == 10 && currentMinute == 0){
-            store(getEncoderPosition(), 66);
+            store(getMotorPosition(), 66);
           }
           if (currentHour == 12 && currentMinute == 0){
-            store(getEncoderPosition(), 100);
+            store(getMotorPosition(), 100);
           }
           if (currentHour == 20 && currentMinute == 30){
-            store(getEncoderPosition(), 66);
+            store(getMotorPosition(), 66);
           }
           if (currentHour == 22 && currentMinute == 0){
-            store(getEncoderPosition(), 0);
+            store(getMotorPosition(), 0);
           }
         }
       } 
@@ -197,33 +195,33 @@ void loop() {
   }
 }
 
-int getEncoderPosition(){
-  int encoderPosition = encoder.getCount(); // Donner une valeur à la position du moteur
-  Serial.print("Position Moteur : ");
-  Serial.println(encoderPosition/BASE);
-  if (retrieveEEPROM() != encoderPosition){
-    saveEEPROM(encoderPosition);
+int getMotorPosition(){
+  int motorPosition = encoder.getCount(); // Set the EEPROM value to the motorPosition integer
+  Serial.print("Current motor position : ");
+  Serial.println(motorPosition/BASE);
+  if (retrieveEEPROM() != motorPosition){
+    saveEEPROM(motorPosition);
   }
-  return(encoderPosition/BASE);
+  return(motorPosition/BASE);
 }
 
-void store(int encoderPosition, int storePosition) {
-  while (encoderPosition != storePosition){
-    if (encoderPosition < storePosition){
+void store(int motorPosition, int closedPercentage) {
+  while (motorPosition != closedPercentage){
+    if (motorPosition < closedPercentage){
       motor1.motorGoP(100); // Move forward
-      encoderPosition = getEncoderPosition(); // Update position
-      Serial.print("Position Attendue : ");
-      Serial.println(storePosition);
+      motorPosition = getMotorPosition(); // Update position
+      Serial.print("Requested position : ");
+      Serial.println(closedPercentage);
     }
     else {
       motor1.motorGoP(-100); // Move backward
-      encoderPosition = getEncoderPosition(); // Update position
-      Serial.print("Position Attendue : ");
-      Serial.println(storePosition);
+      motorPosition = getMotorPosition(); // Update position
+      Serial.print("Requested position : ");
+      Serial.println(closedPercentage);
     }
   }
   motor1.motorGo(0);
-  Serial.print("Moteur arrêté");
+  Serial.print("Motor Stopped");
 }
 
 void getWeather(){
@@ -241,13 +239,13 @@ void getWeather(){
     }
 
     String weatherCondition = weatherData["weather"][0]["main"];
-    Serial.print("Météo : ");
+    Serial.print("Weather : ");
     Serial.println(weatherCondition);
 
       // Automate blinds based on weather conditions
     if (weatherCondition == "Rain" || weatherCondition == "Thunderstorm") {
-      Serial.println("Fermeture des tentures, temps pluvieux.");
-      store(getEncoderPosition(), 0);
+      Serial.println("Closing blinds because of rainy weather.");
+      store(getMotorPosition(), 0);
       }
     }
     http.end();
@@ -255,11 +253,11 @@ void getWeather(){
 }
 
 int retrieveEEPROM(){
-  int EEPROMDataMoteur = preferences.getInt("positionMoteur"); // Provide a default value of 0
+  int EEPROMDataMoteur = preferences.getInt("motorPosition"); // Get the value of the EEPROM
   return(EEPROMDataMoteur);
 }
 
-void saveEEPROM(int positionMoteur){
-  preferences.putInt("positionMoteur", positionMoteur);    // Store an integer value
-  Serial.println("Data sauvegardé.");
+void saveEEPROM(int motorPosition){
+  preferences.putInt("motorPosition", motorPosition); // Store an integer value to EEPROM
+  Serial.println("Motor Position saved to EEPROM.");
 }
