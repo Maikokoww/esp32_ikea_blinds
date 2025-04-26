@@ -15,13 +15,13 @@ NetworkServer server(80);
 
 // ESP32Encoder
 ESP32Encoder encoder;
-#define pinEncoderA 16
+#define pinEncoderA 16 // Replace with your pins
 #define pinEncoderB 17
 #define BASE 200
 long lastupdate1 = 0;
 
 // FS_MX1508
-#define pinINA1 20
+#define pinINA1 20 // Replace with your pins
 #define pinINB1 21
 MX1508 motor1(pinINA1, pinINB1);
 
@@ -29,7 +29,7 @@ MX1508 motor1(pinINA1, pinINB1);
 WiFiUDP ntpUDP;
 
 // NTPClient
-NTPClient ntpClient(ntpUDP, "0.be.pool.ntp.org", 7200);
+NTPClient ntpClient(ntpUDP, "0.be.pool.ntp.org", 7200); // 7200 for +2UTC
 int currentHour = -1;
 int currentMinute = -1;
 long lastupdate2 = 0;
@@ -56,7 +56,7 @@ void setup(){
 
   // EEPROM
   int eepromPosition = retrieveEEPROM();
-  Serial.print("Position de l'eeprom : ");
+  Serial.print("Last EEPROM value : ");
   Serial.println(eepromPosition);
 
   // Encoder 
