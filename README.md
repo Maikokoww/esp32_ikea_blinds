@@ -3,8 +3,8 @@ Control your blinds using an ESP32
 ## About
 **This project is made by a passionate student**
 
-This project is about making a DIY automatic blinds controller using an esp32 and a motor for IKEA FRIDANS.
-Be careful, the code is shaky, modify it to make it work  for your blinds's position.
+This project is about making a DIY automatic blinds controller using an esp32 and a motor for IKEA FRIDANS without having to break the magic wand.
+Be careful, the code is shaky, modify it to make it work for your blinds's position.
 
 ## Components
 - [ESP32](https://fr.aliexpress.com/item/1005006458998450.html?spm=a2g0o.order_list.order_list_main.10.68f45e5bF2hVjN&gatewayAdapt=glo2fra)
